@@ -6,7 +6,7 @@ from pathlib import Path
 
 import httpx
 
-BASE_URL = "https://07c4-123-16-15-189.ngrok-free.app"
+BASE_URL = "http://127.0.0.1:8000"
 QUERIES = Path("data/sample_queries.jsonl")
 
 
