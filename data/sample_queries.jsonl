@@ -8,3 +8,39 @@
 {"user_id":"u08","session_id":"s08","feature":"qa","message":"How do I debug tail latency?"}
 {"user_id":"u09","session_id":"s09","feature":"qa","message":"What is the policy for PII and credit card 4111 1111 1111 1111?"}
 {"user_id":"u10","session_id":"s10","feature":"qa","message":"How should alerts be designed?"}
+{"user_id":"u11","session_id":"s11","feature":"qa","message":"Please send the report to admin@company.com and backup to it.support@vinuni.edu.vn"}
+{"user_id":"u12","session_id":"s12","feature":"qa","message":"My email address is nguyen.van.an@gmail.com, please contact me there"}
+{"user_id":"u13","session_id":"s13","feature":"summary","message":"Forward the logs to devops+alerts@startup.io for further analysis"}
+{"user_id":"u14","session_id":"s14","feature":"qa","message":"The system sent an error to sysadmin@server01.internal.corp, what does it mean?"}
+{"user_id":"u15","session_id":"s15","feature":"qa","message":"User contacted us from thi.nguyen.2001@student.hust.edu.vn about data privacy"}
+{"user_id":"u16","session_id":"s16","feature":"summary","message":"CC: manager@org.vn and ceo@org.vn were included in the leaked email thread"}
+{"user_id":"u17","session_id":"s17","feature":"qa","message":"Notify the team at alerts@monitoring.internal about the SLO breach"}
+{"user_id":"u18","session_id":"s18","feature":"qa","message":"Contact info: email=john.doe@example.com, should this appear in logs?"}
+{"user_id":"u19","session_id":"s19","feature":"qa","message":"Call me at +84 987 654 321 if the system goes down tonight"}
+{"user_id":"u20","session_id":"s20","feature":"qa","message":"Khach hang de lai SDT: 0987.654.321 trong form lien he"}
+{"user_id":"u21","session_id":"s21","feature":"summary","message":"Phone number 0912-345-678 was found in the audit logs, is this a violation?"}
+{"user_id":"u22","session_id":"s22","feature":"qa","message":"I was called by +84912345678 and they asked for my account credentials"}
+{"user_id":"u23","session_id":"s23","feature":"qa","message":"Lien he ho tro ky thuat qua so 0376 543 210 trong gio hanh chinh"}
+{"user_id":"u24","session_id":"s24","feature":"qa","message":"Emergency contact: 0839.123.456, please ensure this does not appear in logs"}
+{"user_id":"u25","session_id":"s25","feature":"summary","message":"User 0705 234 567 reported that their session token was exposed in plain logs"}
+{"user_id":"u26","session_id":"s26","feature":"qa","message":"My CCCD number is 079204012345, how is it stored in your system?"}
+{"user_id":"u27","session_id":"s27","feature":"qa","message":"CMND/CCCD: 001234567890 - day co phai thong tin nhay cam khong?"}
+{"user_id":"u28","session_id":"s28","feature":"summary","message":"Two users identified: 038094003421 and 040077006512 both reported login issues"}
+{"user_id":"u29","session_id":"s29","feature":"qa","message":"Please verify identity with ID number 034091009876 before granting system access"}
+{"user_id":"u30","session_id":"s30","feature":"qa","message":"The audit record shows ID 001096012345 accessed the admin panel at 2am"}
+{"user_id":"u31","session_id":"s31","feature":"qa","message":"My card number is 4111111111111111, why was I charged twice this month?"}
+{"user_id":"u32","session_id":"s32","feature":"qa","message":"Payment failed for card 4111 1111 1111 1111, please check the transaction logs"}
+{"user_id":"u33","session_id":"s33","feature":"summary","message":"Transaction declined for card 4111-1111-1111-1111 at 15:30, need investigation"}
+{"user_id":"u34","session_id":"s34","feature":"qa","message":"Refund request for card 5500-0000-0000-0004, transaction ID TXN-9901"}
+{"user_id":"u35","session_id":"s35","feature":"qa","message":"Cards exposed in data dump: 4111 1111 1111 1111 and 4012 8888 8888 1881"}
+{"user_id":"u36","session_id":"s36","feature":"summary","message":"Customer reported card 4111-1111-1111-1111 was declined 3 consecutive times"}
+{"user_id":"u37","session_id":"s37","feature":"qa","message":"My passport number is B1234567, do I need to provide this for KYC verification?"}
+{"user_id":"u38","session_id":"s38","feature":"summary","message":"Traveler passport B9876543 was scanned at the kiosk and stored in raw application logs"}
+{"user_id":"u39","session_id":"s39","feature":"qa","message":"PASSPORT: C12345678 - should passport numbers appear in application audit logs?"}
+{"user_id":"u40","session_id":"s40","feature":"qa","message":"Booking confirmed for passport N7654321, please review the PII retention policy"}
+{"user_id":"u41","session_id":"s41","feature":"qa","message":"Dia chi giao hang: 123 duong Nguyen Trai, can log dia chi giao hang khong?"}
+{"user_id":"u42","session_id":"s42","feature":"summary","message":"Customer lives at pho Hue so 45, should we store full addresses in the audit log?"}
+{"user_id":"u43","session_id":"s43","feature":"qa","message":"Don hang giao den phuong Ben Nghe, quan 1, TPHCM co van de gi khong?"}
+{"user_id":"u44","session_id":"s44","feature":"qa","message":"Van chuyen den huyen Nha Be, hoi ve chinh sach bao mat dia chi khach hang"}
+{"user_id":"u45","session_id":"s45","feature":"summary","message":"User tai tinh Ha Nam gap loi, dia chi IP co trong log, co vi pham PDPA khong?"}
+{"user_id":"u46","session_id":"s46","feature":"qa","message":"Toi la Nguyen Van A, email: nguyenvana@gmail.com, SDT: 0912-345-678, CCCD: 034091012345, the: 4111 1111 1111 1111"}
