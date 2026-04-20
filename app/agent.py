@@ -26,23 +26,46 @@ class LabAgent:
         self.llm = FakeLLM(model=model)
 
     @observe()
-    def run(self, user_id: str, feature: str, session_id: str, message: str) -> AgentResult:
+    def run(
+        self,
+        user_id: str,
+        feature: str,
+        session_id: str,
+        message: str,
+        correlation_id: str | None = None,
+    ) -> AgentResult:
         started = time.perf_counter()
         docs = retrieve(message)
         prompt = f"Feature={feature}\nDocs={docs}\nQuestion={message}"
         response = self.llm.generate(prompt)
         quality_score = self._heuristic_quality(message, response.text, docs)
         latency_ms = int((time.perf_counter() - started) * 1000)
-        cost_usd = self._estimate_cost(response.usage.input_tokens, response.usage.output_tokens)
+        cost_usd = self._estimate_cost(
+            response.usage.input_tokens, response.usage.output_tokens)
 
-        langfuse_context.update_current_trace(
-            user_id=hash_user_id(user_id),
-            session_id=session_id,
-            tags=["lab", feature, self.model],
-        )
+        if correlation_id:
+            langfuse_context.update_current_trace(
+                user_id=hash_user_id(user_id),
+                session_id=session_id,
+                tags=["lab", feature, self.model],
+                metadata={"correlation_id": correlation_id},
+            )
+        else:
+            langfuse_context.update_current_trace(
+                user_id=hash_user_id(user_id),
+                session_id=session_id,
+                tags=["lab", feature, self.model],
+            )
+
+        observation_metadata = {"doc_count": len(
+            docs), "query_preview": summarize_text(message)}
+        if correlation_id:
+            observation_metadata["correlation_id"] = correlation_id
+
         langfuse_context.update_current_observation(
-            metadata={"doc_count": len(docs), "query_preview": summarize_text(message)},
-            usage_details={"input": response.usage.input_tokens, "output": response.usage.output_tokens},
+            metadata=observation_metadata,
+            usage_details={"input": response.usage.input_tokens,
+                           "output": response.usage.output_tokens},
         )
 
         metrics.record_request(

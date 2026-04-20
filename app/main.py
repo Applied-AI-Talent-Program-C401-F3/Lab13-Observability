@@ -39,6 +39,7 @@ agent = LabAgent()
 
 LAST_SLO_STATUS = {}
 
+
 async def alert_checker() -> None:
     """Background task to evaluate alert rules and SLOs every 5 seconds."""
     global LAST_SLO_STATUS
@@ -51,9 +52,11 @@ async def alert_checker() -> None:
                 current_status = data["status"]
                 if current_status != LAST_SLO_STATUS.get(sli):
                     if "BREACHED" in current_status:
-                        log.warning("slo_breach_detected", sli=sli, actual=data["actual"], objective=data["objective"])
+                        log.warning("slo_breach_detected", sli=sli,
+                                    actual=data["actual"], objective=data["objective"])
                     elif LAST_SLO_STATUS.get(sli) is not None:
-                        log.info("slo_breach_resolved", sli=sli, actual=data["actual"], objective=data["objective"])
+                        log.info("slo_breach_resolved", sli=sli,
+                                 actual=data["actual"], objective=data["objective"])
                     LAST_SLO_STATUS[sli] = current_status
         except Exception as e:
             log.error("background_monitoring_failed", error=str(e))
@@ -100,7 +103,8 @@ async def dashboard_stream(request: Request, window_minutes: int = 60):
                 break
             payload = build_dashboard_payload(window_minutes=window_minutes)
             # Only send if the overview metrics have changed to save I/O
-            current_hash = hash(json.dumps(payload["overview"], sort_keys=True))
+            current_hash = hash(json.dumps(
+                payload["overview"], sort_keys=True))
             if current_hash != last_payload_hash:
                 yield f"data: {json.dumps(payload)}\n\n"
                 last_payload_hash = current_hash
@@ -123,11 +127,13 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
         payload={"message_preview": summarize_text(body.message)},
     )
     try:
+        correlation_id = getattr(request.state, "correlation_id", None)
         result = agent.run(
             user_id=body.user_id,
             feature=body.feature,
             session_id=body.session_id,
             message=body.message,
+            correlation_id=correlation_id,
         )
         log.info(
             "response_sent",
@@ -154,7 +160,8 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
             "request_failed",
             service="api",
             error_type=error_type,
-            payload={"detail": str(exc), "message_preview": summarize_text(body.message)},
+            payload={"detail": str(
+                exc), "message_preview": summarize_text(body.message)},
         )
         raise HTTPException(status_code=500, detail=error_type) from exc
 
@@ -163,7 +170,8 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
 async def enable_incident(name: str) -> JSONResponse:
     try:
         enable(name)
-        log.warning("incident_enabled", service="control", payload={"name": name})
+        log.warning("incident_enabled", service="control",
+                    payload={"name": name})
         return JSONResponse({"ok": True, "incidents": status()})
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
@@ -173,7 +181,8 @@ async def enable_incident(name: str) -> JSONResponse:
 async def disable_incident(name: str) -> JSONResponse:
     try:
         disable(name)
-        log.warning("incident_disabled", service="control", payload={"name": name})
+        log.warning("incident_disabled", service="control",
+                    payload={"name": name})
         return JSONResponse({"ok": True, "incidents": status()})
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
