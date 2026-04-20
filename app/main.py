@@ -1,28 +1,29 @@
 from __future__ import annotations
 
+import asyncio
 import os
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from app.dashboard_data import build_dashboard_payload
 from structlog.contextvars import bind_contextvars
 
 from .agent import LabAgent
+from .alerts import check_alerts
+from .dashboard_data import build_dashboard_payload
 from .incidents import disable, enable, status
 from .logging_config import configure_logging, get_logger
 from .metrics import record_error, snapshot
 from .middleware import CorrelationIdMiddleware
 from .pii import hash_user_id, summarize_text
 from .schemas import ChatRequest, ChatResponse
+from .slo import check_slo_status
 from .tracing import tracing_enabled
-
-import asyncio
-from .alerts import check_alerts
 
 configure_logging()
 log = get_logger()
 app = FastAPI(title="Day 13 Observability Lab")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
@@ -31,16 +32,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(CorrelationIdMiddleware)
+
 agent = LabAgent()
 
 
 async def alert_checker() -> None:
-    """Background task to evaluate alert rules every 5 seconds."""
+    """Background task to evaluate alert rules and SLOs every 5 seconds."""
     while True:
         try:
             check_alerts()
+            # Log SLO breaches for visibility
+            slo_report = check_slo_status()
+            for sli, data in slo_report.items():
+                if "BREACHED" in data["status"]:
+                    log.warning("slo_breach_detected", sli=sli, actual=data["actual"], objective=data["objective"])
         except Exception as e:
-            log.error("alert_check_failed", error=str(e))
+            log.error("background_monitoring_failed", error=str(e))
         await asyncio.sleep(5)
 
 
@@ -63,6 +70,12 @@ async def health() -> dict:
 @app.get("/metrics")
 async def metrics() -> dict:
     return snapshot()
+
+
+@app.get("/slo")
+async def slo() -> dict:
+    return check_slo_status()
+
 
 @app.get("/dashboard-data")
 async def dashboard_data(window_minutes: int = 60) -> dict:
