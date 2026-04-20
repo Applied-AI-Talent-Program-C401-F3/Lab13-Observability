@@ -3,7 +3,9 @@ from __future__ import annotations
 import os
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from app.dashboard_data import build_dashboard_payload
 from structlog.contextvars import bind_contextvars
 
 from .agent import LabAgent
@@ -18,6 +20,13 @@ from .tracing import tracing_enabled
 configure_logging()
 log = get_logger()
 app = FastAPI(title="Day 13 Observability Lab")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_middleware(CorrelationIdMiddleware)
 agent = LabAgent()
 
@@ -40,6 +49,10 @@ async def health() -> dict:
 @app.get("/metrics")
 async def metrics() -> dict:
     return snapshot()
+
+@app.get("/dashboard-data")
+async def dashboard_data(window_minutes: int = 60) -> dict:
+    return build_dashboard_payload(window_minutes=window_minutes)
 
 
 @app.post("/chat", response_model=ChatResponse)
