@@ -60,12 +60,20 @@ def check_alerts():
         
         if is_firing and name not in ACTIVE_ALERTS:
             ACTIVE_ALERTS.add(name)
+            
+            # Map the correct value for the log output
+            val_map = {
+                "high_latency_p95": stats.get("latency_p95"),
+                "high_error_rate": stats.get("error_rate_pct"),
+                "cost_budget_spike": stats.get("total_cost_usd")
+            }
+            
             log.critical(
                 "alert_triggered",
                 alert_name=name,
                 severity=rule["severity"],
                 condition=rule["condition"],
-                actual_value=stats.get(name.replace("high_", "").replace("_p95", "_p95_ms")), # heuristic
+                actual_value=val_map.get(name),
                 payload={"stats": stats}
             )
         elif not is_firing and name in ACTIVE_ALERTS:
