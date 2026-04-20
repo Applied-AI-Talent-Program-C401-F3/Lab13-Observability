@@ -4,11 +4,14 @@ import hashlib
 import re
 
 PII_PATTERNS: dict[str, str] = {
-    "email": r"[\w\.-]+@[\w\.-]+\.\w+",
-    "phone_vn": r"(?:\+84|0)[ \.-]?\d{3}[ \.-]?\d{3}[ \.-]?\d{3,4}", # Matches 090 123 4567, 090.123.4567, etc.
-    "cccd": r"\b\d{12}\b",
+    # email must include + for plus-addressing (devops+alerts@domain.com)
+    "email": r"[\w.+\-]+@[\w.-]+\.\w+",
+    "phone_vn": r"(?:\+84|0)[ \.-]?\d{3}[ \.-]?\d{3}[ \.-]?\d{3,4}",
+    # credit_card before cccd: prevent 12-digit prefix from masking a 16-digit card
     "credit_card": r"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b",
-    # TODO: Add more patterns (e.g., Passport, Vietnamese address keywords)
+    "cccd": r"\b\d{12}\b",
+    "passport": r"\b[A-Z]\d{7,8}\b",
+    "address_vn": r"\b(?:đường|phố|quận|huyện|phường|xã|thành\s+phố|tỉnh)\b",
 }
 
 
@@ -16,6 +19,9 @@ def scrub_text(text: str) -> str:
     safe = text
     for name, pattern in PII_PATTERNS.items():
         safe = re.sub(pattern, f"[REDACTED_{name.upper()}]", safe)
+    # catch-all: any @ surviving pattern matching (e.g. SQL %@%, template vars)
+    # is still a PII indicator and must not appear in logs
+    safe = re.sub(r"@", "[REDACTED_AT]", safe)
     return safe
 
 
