@@ -13,12 +13,10 @@ def enable(name: str) -> None:
     STATE[name] = True
 
 
-
 def disable(name: str) -> None:
     if name not in STATE:
         raise KeyError(f"Unknown incident: {name}")
     STATE[name] = False
-
 
 
 def status() -> dict[str, bool]:

@@ -4,12 +4,13 @@ import argparse
 
 import httpx
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "https://07c4-123-16-15-189.ngrok-free.app"
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--scenario", required=True, choices=["rag_slow", "tool_fail", "cost_spike"])
+    parser.add_argument("--scenario", required=True,
+                        choices=["rag_slow", "tool_fail", "cost_spike"])
     parser.add_argument("--disable", action="store_true")
     args = parser.parse_args()
 
