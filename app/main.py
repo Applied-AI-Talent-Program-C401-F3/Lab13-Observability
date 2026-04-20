@@ -5,7 +5,8 @@ import os
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
+import json
 from structlog.contextvars import bind_contextvars
 
 from .agent import LabAgent
@@ -36,16 +37,24 @@ app.add_middleware(CorrelationIdMiddleware)
 agent = LabAgent()
 
 
+LAST_SLO_STATUS = {}
+
 async def alert_checker() -> None:
     """Background task to evaluate alert rules and SLOs every 5 seconds."""
+    global LAST_SLO_STATUS
     while True:
         try:
             check_alerts()
             # Log SLO breaches for visibility
             slo_report = check_slo_status()
             for sli, data in slo_report.items():
-                if "BREACHED" in data["status"]:
-                    log.warning("slo_breach_detected", sli=sli, actual=data["actual"], objective=data["objective"])
+                current_status = data["status"]
+                if current_status != LAST_SLO_STATUS.get(sli):
+                    if "BREACHED" in current_status:
+                        log.warning("slo_breach_detected", sli=sli, actual=data["actual"], objective=data["objective"])
+                    elif LAST_SLO_STATUS.get(sli) is not None:
+                        log.info("slo_breach_resolved", sli=sli, actual=data["actual"], objective=data["objective"])
+                    LAST_SLO_STATUS[sli] = current_status
         except Exception as e:
             log.error("background_monitoring_failed", error=str(e))
         await asyncio.sleep(5)
@@ -82,11 +91,32 @@ async def dashboard_data(window_minutes: int = 60) -> dict:
     return build_dashboard_payload(window_minutes=window_minutes)
 
 
+@app.get("/dashboard-stream")
+async def dashboard_stream(request: Request, window_minutes: int = 60):
+    async def event_generator():
+        last_payload_hash = None
+        while True:
+            if await request.is_disconnected():
+                break
+            payload = build_dashboard_payload(window_minutes=window_minutes)
+            # Only send if the overview metrics have changed to save I/O
+            current_hash = hash(json.dumps(payload["overview"], sort_keys=True))
+            if current_hash != last_payload_hash:
+                yield f"data: {json.dumps(payload)}\n\n"
+                last_payload_hash = current_hash
+            await asyncio.sleep(1)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: Request, body: ChatRequest) -> ChatResponse:
-    # TODO: Enrich logs with request context (user_id_hash, session_id, feature, model, env)
-    # bind_contextvars(...)
-    
+    bind_contextvars(
+        user_id_hash=hash_user_id(body.user_id),
+        session_id=body.session_id,
+        feature=body.feature,
+        model=agent.model,
+    )
     log.info(
         "request_received",
         service="api",
