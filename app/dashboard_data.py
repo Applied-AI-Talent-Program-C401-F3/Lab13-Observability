@@ -8,6 +8,7 @@ from statistics import mean
 from typing import Any
 
 from .metrics import percentile
+from .slo import check_slo_status
 
 LOG_PATH = Path("data/logs.jsonl")
 ALERT_RULES_PATH = Path("config/alert_rules.yaml")
@@ -184,6 +185,7 @@ def build_dashboard_payload(window_minutes: int = 60) -> dict[str, Any]:
     qps = round(len(response_logs) / max(window_minutes * 60, 1), 4)
 
     slo_data = _parse_simple_yaml(SLO_PATH).get("slis", {})
+    slo_status = check_slo_status()
     alert_rules = _parse_simple_yaml(ALERT_RULES_PATH).get("alerts", [])
     incidents = json.loads(INCIDENTS_PATH.read_text(encoding="utf-8")) if INCIDENTS_PATH.exists() else {}
     evidence_items = _read_evidence_items(EVIDENCE_PATH)
@@ -237,9 +239,11 @@ def build_dashboard_payload(window_minutes: int = 60) -> dict[str, Any]:
         "timeseries": timeseries,
         "error_breakdown": error_breakdown,
         "slo": slo_data,
+        "slo_report": slo_status,
         "alert_rules": alert_rules,
         "incidents": incidents,
         "evidence_checklist": evidence_items,
         "recent_logs": recent_request_logs,
         "pii_samples": pii_samples,
     }
+
