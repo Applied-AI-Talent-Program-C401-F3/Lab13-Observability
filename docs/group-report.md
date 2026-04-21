@@ -80,8 +80,11 @@ https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/
 ### Lưu Lê Gia Bảo
 
 - [TASKS_COMPLETED]: Tích hợp truy vết Langfuse và thêm cơ chế truyền ID tương quan (correlation ID) trong middleware.py.
-- [EVIDENCE_LINK]: https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/5fe0fbb375486fb1dcfcb3908951b523a447c65a
-
+- [EVIDENCE_LINK]:
+  ```
+  https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/5fe0fbb375486fb1dcfcb3908951b523a447c65a
+  ```
+  
 ### Khương Hải Lâm
 
 - [TASKS_COMPLETED]: Xác định các SLO trong slo.yaml và cấu hình các quy tắc cảnh báo trong alert_rules.yaml.
@@ -117,8 +120,12 @@ https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/
 ### Đặng Tuấn Anh
 
 - [TASKS_COMPLETED]: Quản lý báo cáo bản thiết kế (blueprint) và dẫn dắt buổi demo cuối cùng.
-- [EVIDENCE_LINK]: https://github.com/example/lab13-observability/commit/f6g7h8i9
+- [EVIDENCE_LINK]:
 
+```
+https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/690ec0de80f9ad46ebb1afb6a978f80fde722cf2
+https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/f2e3b3d4882550b5288434f9d6566593e1eecf27
+```
 ---
 
 ## 6. Các mục Thưởng (Tùy chọn)
