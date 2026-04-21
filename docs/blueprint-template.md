@@ -117,8 +117,11 @@ https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/
 ### Đặng Tuấn Anh
 
 - [TASKS_COMPLETED]: Quản lý báo cáo bản thiết kế (blueprint) và dẫn dắt buổi demo cuối cùng.
-- [EVIDENCE_LINK]: https://github.com/example/lab13-observability/commit/f6g7h8i9
+- [EVIDENCE_LINK]:
 
+```
+https://github.com/example/lab13-observability/commit/f6g7h8i9
+```
 ---
 
 ## 6. Các mục Thưởng (Tùy chọn)
