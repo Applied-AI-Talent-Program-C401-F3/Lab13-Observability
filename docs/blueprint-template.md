@@ -120,7 +120,8 @@ https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/
 - [EVIDENCE_LINK]:
 
 ```
-[https://github.com/example/lab13-observability/commit/f6g7h8i9](https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/690ec0de80f9ad46ebb1afb6a978f80fde722cf2)
+https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/690ec0de80f9ad46ebb1afb6a978f80fde722cf2
+https://github.com/Applied-AI-Talent-Program-C401-F3/Lab13-Observability/commit/f2e3b3d4882550b5288434f9d6566593e1eecf27
 ```
 ---
 
